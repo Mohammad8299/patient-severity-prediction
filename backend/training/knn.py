@@ -8,6 +8,8 @@ from pathlib import Path
 import joblib
 import os
 
+from app.config import KNN_MODEL_PATH
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 PROCESSED_DIR = BASE_DIR / 'data'/'processed'
 MODEL_DIR = BASE_DIR / 'models'
@@ -56,5 +58,5 @@ cv_scores = cross_val_score(pipeline, X, y, cv=cv, scoring='accuracy')
 
 pipeline.fit(X, y)
 
-model_path = MODEL_DIR / 'knn_hospital_model.pkl'
-joblib.dump(pipeline, model_path)
+
+joblib.dump(pipeline, KNN_MODEL_PATH)
