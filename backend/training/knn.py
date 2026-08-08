@@ -1,22 +1,12 @@
 import pandas as pd
-import numpy as np
 from sklearn.model_selection import cross_val_score, StratifiedKFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline
-from pathlib import Path
 import joblib
-import os
+from app.config import KNN_MODEL_PATH, PROCESSED_DATA_DIR
 
-from app.config import KNN_MODEL_PATH
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-PROCESSED_DIR = BASE_DIR / 'data'/'processed'
-MODEL_DIR = BASE_DIR / 'models'
-
-os.makedirs(MODEL_DIR, exist_ok=True)
-
-data_file = PROCESSED_DIR / 'cleaned_hospital_data.xlsx'
+data_file = PROCESSED_DATA_DIR/ 'cleaned_hospital_data.xlsx'
 df = pd.read_excel(data_file)
 
 target_cols = ['Condition_Mild', 'Condition_Medium', 'Condition_Severe']
