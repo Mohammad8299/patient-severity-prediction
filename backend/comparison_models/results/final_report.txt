@@ -1,0 +1,90 @@
+================================================================================
+FINAL REPORT: COMPARISON OF KNN AND NAIVE BAYES MODELS
+================================================================================
+
+Execution Date: 2026-08-08 17:27:47
+Total Records: 650
+Total Features: 10
+Target Variable: Patient Condition
+Class Distribution:
+   - Mild (0): 69 (10.6%)
+   - Medium (1): 345 (53.1%)
+   - Severe (2): 236 (36.3%)
+
+================================================================================
+MODEL RESULTS:
+================================================================================
+
+      Model  Accuracy  Precision (Macro)  Recall (Macro)  F1-Score (Macro)  Specificity (Macro)  Precision (Weighted)  Recall (Weighted)  F1-Score (Weighted)  Specificity (Weighted)
+        KNN    0.7908             0.8032          0.6969            0.7287               0.8692                0.7930             0.7908               0.7845                  0.8167
+Naive Bayes    0.4785             0.4718          0.5482            0.4618               0.7393                0.5519             0.4785               0.4866                  0.7395
+
+================================================================================
+EXPLANATION OF MACRO VS WEIGHTED AVERAGE:
+================================================================================
+
+MACRO AVERAGE:
+   - Calculated by averaging the metric for each class equally
+   - Gives equal weight to all classes, regardless of sample count
+   - Useful when all classes are equally important
+   - If classes are imbalanced, this can be misleading
+
+WEIGHTED AVERAGE:
+   - Calculated by weighted average of the metric for each class
+   - Weight of each class equals the number of samples in that class
+   - Gives more weight to classes with more samples
+   - More suitable for imbalanced data
+   - Represents the actual performance of the model on the entire dataset
+
+EXAMPLE:
+   If Mild class has 100 samples and Severe class has 10 samples:
+   - Macro: Both classes get equal weight (50%)
+   - Weighted: Mild gets 90% weight, Severe gets 10% weight
+
+================================================================================
+CONCLUSION:
+================================================================================
+
+Best Model: KNN
+   - Accuracy            : 0.7908
+   - Precision (Macro)   : 0.8032
+   - Recall (Macro)      : 0.6969
+   - F1-Score (Macro)    : 0.7287
+   - Specificity (Macro) : 0.8692
+   - Precision (Weighted): 0.7930
+   - Recall (Weighted)   : 0.7908
+   - F1-Score (Weighted) : 0.7845
+   - Specificity (Weighted): 0.8167
+
+Second Model: Naive Bayes
+   - Accuracy            : 0.4785
+   - Precision (Macro)   : 0.4718
+   - Recall (Macro)      : 0.5482
+   - F1-Score (Macro)    : 0.4618
+   - Specificity (Macro) : 0.7393
+   - Precision (Weighted): 0.5519
+   - Recall (Weighted)   : 0.4785
+   - F1-Score (Weighted) : 0.4866
+   - Specificity (Weighted): 0.7395
+
+Performance Difference (KNN better):
+   - F1-Score (Weighted) : +0.2979 (29.79%)
+   - Accuracy            : +0.3123 (31.23%)
+   - Precision (Weighted): +0.2411 (24.11%)
+   - Recall (Weighted)   : +0.3123 (31.23%)
+   - Specificity (Weighted): +0.0772 (7.72%)
+
+ANALYSIS:
+   KNN is more suitable for this data because:
+   - Can detect complex non-linear patterns in patient features
+   - The number of features is appropriate for KNN
+   - No assumption about data distribution is required
+   - Better at handling multi-class classification
+
+FINAL RESULT:
+   KNN model is significantly better for Patient Condition prediction.
+
+================================================================================
+Report successfully generated.
+All results saved in 'comparison_models/results/' directory.
+================================================================================
