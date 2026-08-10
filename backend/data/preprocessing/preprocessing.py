@@ -21,6 +21,8 @@ numeric_cols = data_frame.select_dtypes(include=[np.number]).columns.tolist()
 if 'PatientCondition' in numeric_cols:
     numeric_cols.remove('PatientCondition')
 
+integer_cols = ['SymptomCount', 'DaysWithSymptoms', 'PreviousDiseases', 'MedicationCount', 'Age']
+
 categorical_cols = data_frame.select_dtypes(include=['object']).columns.tolist()
 
 outlier_info = {}
@@ -54,7 +56,13 @@ for col in numeric_cols:
 for col in numeric_cols:
     if df_cleaned[col].isnull().sum() > 0:
         median_val = df_cleaned[col].median()
+        if col in integer_cols:
+            median_val = int(round(median_val))
         df_cleaned[col].fillna(median_val, inplace=True)
+
+for col in integer_cols:
+    if col in df_cleaned.columns:
+        df_cleaned[col] = df_cleaned[col].astype(int)
 
 for col in categorical_cols:
     if col != 'PatientCondition':
@@ -90,7 +98,7 @@ one_hot_encoded = pd.get_dummies(df_cleaned['PatientCondition_Encoded'], prefix=
 
 rename_dict = {}
 for col in one_hot_encoded.columns:
-    class_code = int(col.split('_')[1])
+    class_code = int(col.split('_')[-1])
     new_name = f"Condition_{class_names[class_code]}"
     rename_dict[col] = new_name
 

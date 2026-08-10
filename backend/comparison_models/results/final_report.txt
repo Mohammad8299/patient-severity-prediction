@@ -2,7 +2,7 @@
 FINAL REPORT: COMPARISON OF KNN AND NAIVE BAYES MODELS
 ================================================================================
 
-Execution Date: 2026-08-08 17:27:47
+Execution Date: 2026-08-08 21:36:43
 Total Records: 650
 Total Features: 10
 Target Variable: Patient Condition
@@ -17,7 +17,7 @@ MODEL RESULTS:
 
       Model  Accuracy  Precision (Macro)  Recall (Macro)  F1-Score (Macro)  Specificity (Macro)  Precision (Weighted)  Recall (Weighted)  F1-Score (Weighted)  Specificity (Weighted)
         KNN    0.7908             0.8032          0.6969            0.7287               0.8692                0.7930             0.7908               0.7845                  0.8167
-Naive Bayes    0.4785             0.4718          0.5482            0.4618               0.7393                0.5519             0.4785               0.4866                  0.7395
+Naive Bayes    0.4815             0.4739          0.5505            0.4643               0.7408                0.5544             0.4815               0.4894                  0.7408
 
 ================================================================================
 EXPLANATION OF MACRO VS WEIGHTED AVERAGE:
@@ -57,22 +57,22 @@ Best Model: KNN
    - Specificity (Weighted): 0.8167
 
 Second Model: Naive Bayes
-   - Accuracy            : 0.4785
-   - Precision (Macro)   : 0.4718
-   - Recall (Macro)      : 0.5482
-   - F1-Score (Macro)    : 0.4618
-   - Specificity (Macro) : 0.7393
-   - Precision (Weighted): 0.5519
-   - Recall (Weighted)   : 0.4785
-   - F1-Score (Weighted) : 0.4866
-   - Specificity (Weighted): 0.7395
+   - Accuracy            : 0.4815
+   - Precision (Macro)   : 0.4739
+   - Recall (Macro)      : 0.5505
+   - F1-Score (Macro)    : 0.4643
+   - Specificity (Macro) : 0.7408
+   - Precision (Weighted): 0.5544
+   - Recall (Weighted)   : 0.4815
+   - F1-Score (Weighted) : 0.4894
+   - Specificity (Weighted): 0.7408
 
 Performance Difference (KNN better):
-   - F1-Score (Weighted) : +0.2979 (29.79%)
-   - Accuracy            : +0.3123 (31.23%)
-   - Precision (Weighted): +0.2411 (24.11%)
-   - Recall (Weighted)   : +0.3123 (31.23%)
-   - Specificity (Weighted): +0.0772 (7.72%)
+   - F1-Score (Weighted) : +0.2951 (29.51%)
+   - Accuracy            : +0.3093 (30.93%)
+   - Precision (Weighted): +0.2386 (23.86%)
+   - Recall (Weighted)   : +0.3093 (30.93%)
+   - Specificity (Weighted): +0.0759 (7.59%)
 
 ANALYSIS:
    KNN is more suitable for this data because:
