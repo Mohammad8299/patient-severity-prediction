@@ -5,15 +5,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const postAnalysisArea = document.getElementById('postAnalysisArea');
 
     function updateResultDisplay(element, status, text) {
-        element.classList.remove('status-strong', 'status-medium', 'status-weak');
+        element.classList.remove('status-severe', 'status-medium', 'status-mild');
         element.innerHTML = `<span>${text}</span>`;
 
-        if (status === 'strong') {
-            element.classList.add('status-strong');
+        if (status === 'severe') {
+            element.classList.add('status-severe');
         } else if (status === 'medium') {
             element.classList.add('status-medium');
-        } else if (status === 'weak') {
-            element.classList.add('status-weak');
+        } else if (status === 'mild') {
+            element.classList.add('status-mild');
         }
     }
 
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await connResponse.value.json();
                 updateResultDisplay(connResultBox, data.status, data.message);
             } else {
-                simulateResult(connResultBox, 'strong', 'وضعیت: پایدار (CNN)');
+                simulateResult(connResultBox, 'mild', 'وضعیت: پایدار (CNN)');
             }
 
             if (bayesResponse.status === 'fulfilled' && bayesResponse.value.ok) {

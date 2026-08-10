@@ -63,7 +63,8 @@ body {
     font-size: 1.2rem;
     margin-bottom: 25px;
     color: var(--text-main);
-    display: flex;    align-items: center;
+    display: flex;    
+    align-items: center;
     gap: 10px;
 }
 
@@ -143,7 +144,7 @@ body {
     justify-content: center;
 }
 
-.status-strong { 
+.status-severe { 
     background-color: var(--color-success) !important; 
     color: white !important; 
     border: none !important;
@@ -153,7 +154,7 @@ body {
     color: white !important; 
     border: none !important;
 }
-.status-weak { 
+.status-mild { 
     background-color: var(--color-danger) !important; 
     color: white !important; 
     border: none !important;
@@ -176,6 +177,6 @@ body {
     gap: 8px;
 }
 .dot { width: 10px; height: 10px; border-radius: 50%; }
-.dot.strong { background-color: var(--color-success); }
+.dot.severe { background-color: var(--color-success); }
 .dot.medium { background-color: var(--color-warning); }
-.dot.weak   { background-color: var(--color-danger); }
+.dot.mild   { background-color: var(--color-danger); }
