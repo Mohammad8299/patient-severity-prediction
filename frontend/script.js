@@ -21,10 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
     healthForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        // ۲. نمایش کل مجموعه (نتایج + راهنما) به صورت یکجا
         postAnalysisArea.style.display = 'grid';
 
-        // ۳. نمایش حالت در حال پردازش (بسیار مهم: چون بخش نتایج تازه ظاهر شده است)
         connResultBox.innerHTML = "در حال پردازش...";
         connResultBox.className = "result-box"; 
         bayesResultBox.innerHTML = "در حال پردازش...";
@@ -43,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            // شبیه‌سازی درخواست به API
+            
             const [connResponse, bayesResponse] = await Promise.allSettled([
                 fetch('/api/predict-cnn', {
                     method: 'POST',
@@ -57,16 +55,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
             ]);
 
-            // مدیریت پاسخ CNN
             if (connResponse.status === 'fulfilled' && connResponse.value.ok) {
                 const data = await connResponse.value.json();
                 updateResultDisplay(connResultBox, data.status, data.message);
             } else {
-                // در صورت نبود API واقعی، نتیجه شبیه‌سازی شده را نمایش می‌دهد
                 simulateResult(connResultBox, 'strong', 'وضعیت: پایدار (CNN)');
             }
 
-            // مدیریت پاسخ Bayes
             if (bayesResponse.status === 'fulfilled' && bayesResponse.value.ok) {
                 const data = await bayesResponse.value.json();
                 updateResultDisplay(bayesResultBox, data.status, data.message);
