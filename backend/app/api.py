@@ -1,6 +1,8 @@
-from fastapi import APIRouter
-
+import json
+from fastapi import APIRouter, HTTPException
 from app.requests.BayesPredictionRequest import BayesPredictionRequest
+
+from app.config import BAYES_MODEL_SCORES_PATH, KNN_MODEL_SCORES_PATH
 from models.params.PredictBayesParams import PredictBayesParams
 from models.ml import predict_bayes, predict_knn
 from models.params.PredictKnnParams import PredictKnnParams
@@ -45,3 +47,23 @@ def bayes_prediction(data: BayesPredictionRequest) -> dict:
         )
     )
     return {"data": {"severity": result}}
+
+
+@router.get("/scores/knn")
+def get_knn_model_scores() -> dict:
+    if not KNN_MODEL_SCORES_PATH.exists():
+        raise HTTPException(404)
+
+    with open(KNN_MODEL_SCORES_PATH) as file:
+        scores = json.load(file)
+    return scores
+
+
+@router.get("/scores/bayes")
+def get_bayes_model_scores() -> dict:
+    if not BAYES_MODEL_SCORES_PATH.exists():
+        raise HTTPException(404)
+
+    with open(BAYES_MODEL_SCORES_PATH) as file:
+        scores = json.load(file)
+    return scores
