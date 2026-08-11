@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
             DaysWithSymptoms: parseInt(document.getElementById('DaysWithSymptoms').value),
             PreviousDiseases: parseInt(document.getElementById('PreviousDiseases').value),
             MeditationCount: parseInt(document.getElementById('MeditationCount').value),
+            TestScore: parseInt(document.getElementById('TestScore').value),
         };
 
         try {
@@ -47,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(formData)
+                    
                 }),
                 fetch('/api/predict-bayes', {
                     method: 'POST',
