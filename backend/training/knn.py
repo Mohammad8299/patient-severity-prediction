@@ -52,19 +52,7 @@ pipeline.fit(X, y)
 
 joblib.dump(pipeline, KNN_MODEL_PATH)
 
-scores = get_model_scores(pipeline, X, y)
+scores = get_model_scores(pipeline, X, y,average="weighted")
 
-scores = {
-    key: (
-        {
-            "mild": value[0],
-            "medium": value[1],
-            "severe": value[2],
-        }
-        if isinstance(value, ndarray)
-        else value
-    )
-    for key, value in scores.items()
-}
 with open(KNN_MODEL_SCORES_PATH, "w") as file:
     json.dump(scores, file, indent=4)
