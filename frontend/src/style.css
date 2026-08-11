@@ -5,10 +5,10 @@
     --text-main: #1e293b;
     --text-muted: #64748b;
     --border-color: #e2e8f0;
-    
-    --color-success: #10b981; 
-    --color-warning: #f59e0b; 
-    --color-danger: #ef4444;  
+
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-danger: #ef4444;
 }
 
 * {
@@ -32,7 +32,7 @@ body {
 }
 
 .page-header {
-    background: linear-gradient(90deg,  #C1E8FF, #FFC8DD);
+    background: linear-gradient(90deg, #c1e8ff, #ffc8dd);
     padding: 30px 0;
     border-bottom: 1px solid var(--border-color);
     text-align: center;
@@ -59,11 +59,12 @@ body {
     border: 1px solid var(--border-color);
 }
 
-.card h2, .card h3 {
+.card h2,
+.card h3 {
     font-size: 1.2rem;
     margin-bottom: 25px;
     color: var(--text-main);
-    display: flex;    
+    display: flex;
     align-items: center;
     gap: 10px;
 }
@@ -126,7 +127,9 @@ body {
 }
 
 @media (max-width: 768px) {
-    .results-wrapper { grid-template-columns: 1fr; }
+    .results-wrapper {
+        grid-template-columns: 1fr;
+    }
 }
 
 .result-box {
@@ -144,26 +147,25 @@ body {
     justify-content: center;
 }
 
-.status-severe { 
-    background-color: var(--color-success) !important; 
-    color: white !important; 
+.status-severe {
+    background-color: var(--color-success) !important;
+    color: white !important;
     border: none !important;
 }
-.status-medium { 
-    background-color: var(--color-warning) !important; 
-    color: white !important; 
+.status-medium {
+    background-color: var(--color-warning) !important;
+    color: white !important;
     border: none !important;
 }
-.status-mild { 
-    background-color: var(--color-danger) !important; 
-    color: white !important; 
+.status-mild {
+    background-color: var(--color-danger) !important;
+    color: white !important;
     border: none !important;
 }
 
 .legend-card {
     padding: 15px;
-     
- }
+}
 .legend {
     display: flex;
     justify-content: center;
@@ -176,7 +178,17 @@ body {
     align-items: center;
     gap: 8px;
 }
-.dot { width: 10px; height: 10px; border-radius: 50%; }
-.dot.severe { background-color: var(--color-success); }
-.dot.medium { background-color: var(--color-warning); }
-.dot.mild   { background-color: var(--color-danger); }
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+.dot.severe {
+    background-color: var(--color-success);
+}
+.dot.medium {
+    background-color: var(--color-warning);
+}
+.dot.mild {
+    background-color: var(--color-danger);
+}

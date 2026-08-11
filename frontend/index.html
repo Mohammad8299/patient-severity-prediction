@@ -1,93 +1,126 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سیستم تحلیل سلامت</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>سیستم تحلیل سلامت</title>
+        <script type="module" src="src/main.js" defer></script>
+    </head>
+    <body>
+        <header class="page-header">
+            <div class="container">
+                <h1>🩺پنل تحلیل وضعیت سلامت</h1>
+                <p>ورودی‌های بیومتریک را برای تحلیل مدل‌های هوشمند وارد کنید</p>
+            </div>
+        </header>
 
-    <header class="page-header">
-        <div class="container">
-            <h1>🩺پنل تحلیل وضعیت سلامت</h1>
-            <p>ورودی‌های بیومتریک را برای تحلیل مدل‌های هوشمند وارد کنید</p>
-        </div>
-    </header>
-
-    <main class="container">
-        <section class="card form-card">
-            <h2><span class="icon">📋</span>مشخصات بیمار</h2>
-            <form id="healthForm">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>سن</label>
-                        <input type="number" id="Age" placeholder="مثلاً: 35" required>
+        <main class="container">
+            <section class="card form-card">
+                <h2><span class="icon">📋</span>مشخصات بیمار</h2>
+                <form id="healthForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>سن</label>
+                            <input type="number" id="Age" placeholder="مثلاً: 35" required />
+                        </div>
+                        <div class="form-group">
+                            <label>دما (°C)</label>
+                            <input
+                                type="number"
+                                step="0.1"
+                                id="Temperature"
+                                placeholder="مثلاً: 36.5"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>فشار خون</label>
+                            <input
+                                type="number"
+                                id="BloodPressure"
+                                placeholder="مثلاً: 120"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>ضربان قلب</label>
+                            <input type="number" id="HeartRate" placeholder="مثلاً: 72" required />
+                        </div>
+                        <div class="form-group">
+                            <label>سطح اکسیژن (%)</label>
+                            <input
+                                type="number"
+                                id="OxygenLevel"
+                                placeholder="مثلاً: 98"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>تعداد علائم</label>
+                            <input
+                                type="number"
+                                id="SymptomCount"
+                                placeholder="مثلاً: 2"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>روزهای با علامت</label>
+                            <input
+                                type="number"
+                                id="DaysWithSymptoms"
+                                placeholder="مثلاً: 3"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>بیماری‌های قبلی</label>
+                            <input
+                                type="number"
+                                id="PreviousDiseases"
+                                placeholder="مثلاً: 1"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>تعداد مدیتیشن (هفته)</label>
+                            <input
+                                type="number"
+                                id="MeditationCount"
+                                placeholder="مثلاً: 5"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>نمره آزمون</label>
+                            <input type="number" id="TestScore" placeholder="مثلاً: 79" required />
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>دما (°C)</label>
-                        <input type="number" step="0.1" id="Temperature" placeholder="مثلاً: 36.5" required>
-                    </div>
-                    <div class="form-group">
-                        <label>فشار خون</label>
-                        <input type="number" id="BloodPressure" placeholder="مثلاً: 120" required>
-                    </div>
-                    <div class="form-group">
-                        <label>ضربان قلب</label>
-                        <input type="number" id="HeartRate" placeholder="مثلاً: 72" required>
-                    </div>
-                    <div class="form-group">
-                        <label>سطح اکسیژن (%)</label>
-                        <input type="number" id="OxygenLevel" placeholder="مثلاً: 98" required>
-                    </div>
-                    <div class="form-group">
-                        <label>تعداد علائم</label>
-                        <input type="number" id="SymptomCount" placeholder="مثلاً: 2" required>
-                    </div>
-                    <div class="form-group">
-                        <label>روزهای با علامت</label>
-                        <input type="number" id="DaysWithSymptoms" placeholder="مثلاً: 3" required>
-                    </div>
-                    <div class="form-group">
-                        <label>بیماری‌های قبلی</label>
-                        <input type="number" id="PreviousDiseases" placeholder="مثلاً: 1" required>
-                    </div>
-                    <div class="form-group">
-                        <label>تعداد مدیتیشن (هفته)</label>
-                        <input type="number" id="MeditationCount" placeholder="مثلاً: 5" required>
-                    </div>
-                    <div class="form-group">
-                        <label>نمره آزمون</label>
-                        <input type="number" id="TestScore" placeholder="مثلاً: 79" required>
-                    </div>
-                </div>
-                <button type="submit" class="btn-primary">شروع تحلیل</button>
-            </form>
-        </section>
-        <div id="postAnalysisArea" style="display: none;">
-            <section class="results-section">
-                <div class="results-wrapper" id="resultsWrapper">
-                    <div class="card result-card">
-                        <h3>مدل یادگیری عمیق (CNN)</h3>
-                        <div id="connResult" class="result-box"></div>
-                    </div>
-                    <div class="card result-card">
-                        <h3>مدل احتمالات (Bayes)</h3>
-                        <div id="bayesResult" class="result-box"></div>
-                    </div>
-                </div>
+                    <button type="submit" class="btn-primary">شروع تحلیل</button>
+                </form>
             </section>
+            <div id="postAnalysisArea" style="display: none">
+                <section class="results-section">
+                    <div class="results-wrapper" id="resultsWrapper">
+                        <div class="card result-card">
+                            <h3>مدل یادگیری عمیق (CNN)</h3>
+                            <div id="connResult" class="result-box"></div>
+                        </div>
+                        <div class="card result-card">
+                            <h3>مدل احتمالات (Bayes)</h3>
+                            <div id="bayesResult" class="result-box"></div>
+                        </div>
+                    </div>
+                </section>
 
-            <section class="card legend-card">
-                <ul class="legend">
-                    <li><span class="dot severe"></span> خفیف (Green)</li>
-                    <li><span class="dot medium"></span> متوسط (Yellow)</li>
-                    <li><span class="dot mild"></span> شدید (Red)</li>
-                </ul>
-            </section>
-        </div>
-    </main>
-
-    <script src="script.js"></script>
-</body>
+                <section class="card legend-card">
+                    <ul class="legend">
+                        <li><span class="dot severe"></span> خفیف (Green)</li>
+                        <li><span class="dot medium"></span> متوسط (Yellow)</li>
+                        <li><span class="dot mild"></span> شدید (Red)</li>
+                    </ul>
+                </section>
+            </div>
+        </main>
+    </body>
 </html>
