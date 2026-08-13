@@ -1,9 +1,14 @@
+import { CnnPrediction } from './api/prediction'
 import './style.css'
+import Chart from 'chart.js/auto'
+
 
 const healthForm = document.getElementById('healthForm')
 const connResultBox = document.getElementById('connResult')
 const bayesResultBox = document.getElementById('bayesResult')
 const postAnalysisArea = document.getElementById('postAnalysisArea')
+
+let radarChart = null
 
 function updateResultDisplay(element, status, text) {
     element.classList.remove('status-severe', 'status-medium', 'status-mild')
@@ -16,6 +21,60 @@ function updateResultDisplay(element, status, text) {
     } else if (status === 'mild') {
         element.classList.add('status-mild')
     }
+}
+
+function drawRadarChart(knnMetrics, bayesMetrics) {
+    const canvas = document.getElementById('radarChart')
+    if (!canvas) return
+
+    if (radarChart) radarChart.destroy() 
+
+    radarChart = new Chart(canvas, {
+        type: 'radar',
+        data: {
+            labels: ['Accuracy', 'Average', 'Recall', 'F1-Score'],
+            datasets: [
+                {
+                    label: 'مدل KNN',
+                    data: [
+                        knnMetrics.accuracy,
+                        knnMetrics.precision,
+                        knnMetrics.recall,
+                        knnMetrics.f1
+                    ],
+                    fill: true,
+                    backgroundColor: 'rgba(254, 71, 38, 0.83)',
+                    borderColor: '#2563eb',
+                    pointBackgroundColor: '#2563eb',
+                    borderWidth: 2
+                },
+                {
+                    label: 'مدل Bayes',
+                    data: [
+                        bayesMetrics.accuracy,
+                        bayesMetrics.precision,
+                        bayesMetrics.recall,
+                        bayesMetrics.f1
+                    ],
+                    fill: true,
+                    backgroundColor: 'rgba(255, 146, 21, 0.78)',
+                    borderColor: '#ef4444',
+                    pointBackgroundColor: '#ef4444',
+                    borderWidth: 2
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                r: {
+                    min: 0,
+                    max: 1,      
+                    ticks: { stepSize: 0.2 }
+                }
+            }
+        }
+    })
 }
 
 healthForm.addEventListener('submit', async (e) => {
@@ -40,36 +99,68 @@ healthForm.addEventListener('submit', async (e) => {
         MeditationCount: parseInt(document.getElementById('MeditationCount').value),
         TestScore: parseInt(document.getElementById('TestScore').value),
     }
-
+    CnnPrediction
+    
     try {
         const [connResponse, bayesResponse] = await Promise.allSettled([
-            fetch('/api/predict-cnn', {
+            fetch('http://127.0.0.1:8000/predict/knn', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({
+                    "age" : formData.Age, 
+                    "temperature" : formData.Temperature,
+                    "blood_pressure" : formData.BloodPressure,
+                    "heart_rate" : formData.HeartRate,
+                    "oxygen_level" : formData.OxygenLevel,
+                    "symptom_count" : formData.SymptomCount,
+                    "days_with_symptom" : formData.DaysWithSymptoms,
+                    "previous_diseases" : formData.PreviousDiseases, 
+                    "medication_count" : formData.MeditationCount, 
+                    "test_score" : formData.TestScore, 
+                }),
+                
             }),
-            fetch('/api/predict-bayes', {
+            fetch('http://127.0.0.1:8000/predict/bayes', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({
+                    "age" : formData.Age, 
+                    "temperature" : formData.Temperature,
+                    "blood_pressure" : formData.BloodPressure,
+                    "heart_rate" : formData.HeartRate,
+                    "oxygen_level" : formData.OxygenLevel,
+                    "symptom_count" : formData.SymptomCount,
+                    "days_with_symptom" : formData.DaysWithSymptoms,
+                    "previous_diseases" : formData.PreviousDiseases, 
+                    "medication_count" : formData.MeditationCount, 
+                    "test_score" : formData.TestScore, 
+                }),
             }),
         ])
+
+        let knnMetrics = null
+        let bayesMetrics = null
+
+
 
         if (connResponse.status === 'fulfilled' && connResponse.value.ok) {
             const data = await connResponse.value.json()
             updateResultDisplay(connResultBox, data.status, data.message)
         } else {
-            simulateResult(connResultBox, 'mild', 'وضعیت: پایدار (CNN)')
+            simulateResult(connResultBox, 'mild', 'وضعیت: خفیف(KNN)')
         }
 
         if (bayesResponse.status === 'fulfilled' && bayesResponse.value.ok) {
             const data = await bayesResponse.value.json()
             updateResultDisplay(bayesResultBox, data.status, data.message)
         } else {
-            simulateResult(bayesResultBox, 'medium', 'وضعیت: نیاز به بررسی (Bayes)')
+            simulateResult(bayesResultBox, 'medium', 'وضعیت: متوسط(Bayes)')
+        }
+        if (knnMetrics && bayesMetrics) {
+            drawRadarChart(knnMetrics, bayesMetrics)
         }
     } catch (error) {
-        console.erro('Error:', error)
+        console.error('Error:', error)
         connResultBox.innerHTML = 'خطا در اتصال'
         bayesResultBox.innerHTML = 'خطا در اتصال'
     }
