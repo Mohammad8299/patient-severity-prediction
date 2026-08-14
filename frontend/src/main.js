@@ -146,6 +146,7 @@ healthForm.addEventListener('submit', async (e) => {
         if (connResponse.status === 'fulfilled' && connResponse.value.ok) {
             const data = await connResponse.value.json()
             updateResultDisplay(connResultBox, data.status, data.message)
+            knnMetrics = data.metrics || data       
         } else {
             simulateResult(connResultBox, 'mild', 'وضعیت: خفیف(KNN)')
         }
@@ -153,6 +154,7 @@ healthForm.addEventListener('submit', async (e) => {
         if (bayesResponse.status === 'fulfilled' && bayesResponse.value.ok) {
             const data = await bayesResponse.value.json()
             updateResultDisplay(bayesResultBox, data.status, data.message)
+            bayesMetrics = data.metrics || data     
         } else {
             simulateResult(bayesResultBox, 'medium', 'وضعیت: متوسط(Bayes)')
         }
