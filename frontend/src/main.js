@@ -8,7 +8,6 @@ const connResultBox = document.getElementById('connResult')
 const bayesResultBox = document.getElementById('bayesResult')
 const postAnalysisArea = document.getElementById('postAnalysisArea')
 
-let radarChart = null
 
 function updateResultDisplay(element, status, text) {
     element.classList.remove('status-severe', 'status-medium', 'status-mild')
@@ -23,59 +22,57 @@ function updateResultDisplay(element, status, text) {
     }
 }
 
-function drawRadarChart(knnMetrics, bayesMetrics) {
-    const canvas = document.getElementById('radarChart')
-    if (!canvas) return
+let myRadarChart; 
 
-    if (radarChart) radarChart.destroy() 
+function drawRadarChart(knn, bayes) {
+    const ctx = document.getElementById('radarChart').getContext('2d');
+    
+    if (myRadarChart) {
+        myRadarChart.destroy();
+    }
 
-    radarChart = new Chart(canvas, {
+    myRadarChart = new Chart(ctx, {
         type: 'radar',
         data: {
-            labels: ['Accuracy', 'Average', 'Recall', 'F1-Score'],
-            datasets: [
-                {
-                    label: 'مدل KNN',
-                    data: [
-                        knnMetrics.accuracy,
-                        knnMetrics.precision,
-                        knnMetrics.recall,
-                        knnMetrics.f1
-                    ],
-                    fill: true,
-                    backgroundColor: 'rgba(254, 71, 38, 0.83)',
-                    borderColor: '#2563eb',
-                    pointBackgroundColor: '#2563eb',
-                    borderWidth: 2
-                },
-                {
-                    label: 'مدل Bayes',
-                    data: [
-                        bayesMetrics.accuracy,
-                        bayesMetrics.precision,
-                        bayesMetrics.recall,
-                        bayesMetrics.f1
-                    ],
-                    fill: true,
-                    backgroundColor: 'rgba(255, 146, 21, 0.78)',
-                    borderColor: '#ef4444',
-                    pointBackgroundColor: '#ef4444',
-                    borderWidth: 2
-                }
-            ]
+            labels: ['Accuracy', 'Precision', 'Recall', 'F1'],
+            datasets: [{
+                label: 'KNN',
+                data: [knn.accuracy, knn.precision, knn.recall, knn.f1],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2
+            }, {
+                label: 'Bayes',
+                data: [bayes.accuracy, bayes.precision, bayes.recall, bayes.f1],
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 2
+            }]
         },
         options: {
-            responsive: true,
             scales: {
                 r: {
-                    min: 0,
-                    max: 1,      
-                    ticks: { stepSize: 0.2 }
+                    beginAtZero: true,
+                    max: 1,
+                    ticks: {
+                        stepSize: 0.1, 
+                        precision: 2,  
+                        callback: function(value) { return value.toFixed(1); } 
+                    },
+                    grid: {
+                        circular: true
+                    }
                 }
+            },
+            animation: {
+                duration: 2000, 
+                easing: 'easeOutQuart' 
             }
         }
-    })
+        
+    });
 }
+
 
 healthForm.addEventListener('submit', async (e) => {
     e.preventDefault()
@@ -138,6 +135,11 @@ healthForm.addEventListener('submit', async (e) => {
             }),
         ])
 
+       
+
+       
+    
+
         let knnMetrics = null
         let bayesMetrics = null
 
@@ -146,18 +148,25 @@ healthForm.addEventListener('submit', async (e) => {
         if (connResponse.status === 'fulfilled' && connResponse.value.ok) {
             const data = await connResponse.value.json()
             updateResultDisplay(connResultBox, data.status, data.message)
-            knnMetrics = data.metrics || data       
-        } else {
-            simulateResult(connResultBox, 'mild', 'وضعیت: خفیف(KNN)')
-        }
+            if (data.metrics) {
+                knnMetrics = data.metrics;
+            } else {
+                const scoreRes = await fetch('http://127.0.0.1:8000/scores/knn');
+                knnMetrics = await scoreRes.json();
+            }
 
+        }
         if (bayesResponse.status === 'fulfilled' && bayesResponse.value.ok) {
             const data = await bayesResponse.value.json()
             updateResultDisplay(bayesResultBox, data.status, data.message)
-            bayesMetrics = data.metrics || data     
-        } else {
-            simulateResult(bayesResultBox, 'medium', 'وضعیت: متوسط(Bayes)')
+            if (data.metrics) {
+                bayesMetrics = data.metrics;
+            } else {
+                const scoreRes = await fetch('http://127.0.0.1:8000/scores/bayes');
+                bayesMetrics = await scoreRes.json();
+            }
         }
+        
         if (knnMetrics && bayesMetrics) {
             drawRadarChart(knnMetrics, bayesMetrics)
         }

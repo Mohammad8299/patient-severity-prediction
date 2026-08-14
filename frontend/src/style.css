@@ -178,6 +178,10 @@ body {
     align-items: center;
     gap: 8px;
 }
+.chart {
+    max-width: 500px;
+    margin: 0 auto;
+}
 .dot {
     width: 10px;
     height: 10px;
