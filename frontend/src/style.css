@@ -6,9 +6,9 @@
     --text-muted: #64748b;
     --border-color: #e2e8f0;
 
-    --color-success: #10b981;
+    --color-success: #ef4444;
     --color-warning: #f59e0b;
-    --color-danger: #ef4444;
+    --color-danger: #10b981;
 }
 
 * {
