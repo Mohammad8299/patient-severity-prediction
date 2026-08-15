@@ -1,6 +1,11 @@
-import { CnnPrediction } from './api/prediction';
+import { drawRadarChart } from './charts.js';;
 import './style.css';
-import Chart from 'chart.js/auto';
+import { 
+    getKnnPrediction, 
+    getBayesPrediction, 
+    getKnnScores, 
+    getBayesScores 
+} from './api/prediction.js';
 
 const healthForm = document.getElementById('healthForm');
 const connResultBox = document.getElementById('connResult'); 
@@ -11,84 +16,31 @@ function updateResultDisplay(element, rawData) {
     if (!element) return;
 
     const data = rawData.data ?? rawData;
-
     const status = data.severity ?? data.status ?? 'medium';
 
     let displayMessage = data.message ?? data.prediction;
     
     if (!displayMessage) {
-        if (status === 'severe') {
-            displayMessage = 'وضعیت: شدید';
-        } else if (status === 'medium') {
-            displayMessage = 'وضعیت: متوسط';
-        } else if (status === 'mild') {
-            displayMessage = 'وضعیت: خفیف';
-        } else {
-            displayMessage = 'نتیجه‌ای دریافت نشد';
-        }
+        if (status === 'severe') displayMessage = 'وضعیت: شدید';
+        else if (status === 'medium') displayMessage = 'وضعیت: متوسط';
+        else if (status === 'mild') displayMessage = 'وضعیت: خفیف';
+        else displayMessage = 'نتیجه‌ای یافت نشد'; 
     }
 
     element.classList.remove('status-severe', 'status-medium', 'status-mild');
 
     element.innerHTML = `<span>${displayMessage}</span>`;
 
-    if (status === 'severe') {
-        element.classList.add('status-severe');
-    } else if (status === 'medium') {
-        element.classList.add('status-medium');
-    } else if (status === 'mild') {
-        element.classList.add('status-mild');
-    } else {
-        element.classList.add('status-medium');
-    }
-}
-
-let myRadarChart;
-
-function drawRadarChart(knn, bayes) {
-    const canvasElement = document.getElementById('radarChart');
-    if (!canvasElement) return;
-    const ctx = canvasElement.getContext('2d');
-
-    if (myRadarChart) {
-        myRadarChart.destroy();
-    }
-
-    myRadarChart = new Chart(ctx, {
-        type: 'radar',
-        data: {
-            labels: ['Accuracy', 'Precision', 'Recall', 'F1'],
-            datasets: [{
-                label: 'KNN',
-                data: [knn.accuracy, knn.precision, knn.recall, knn.f1],
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 2
-            }, {
-                label: 'Bayes',
-                data: [bayes.accuracy, bayes.precision, bayes.recall, bayes.f1],
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 2
-            }]
-        },
-        options: {
-            scales: {
-                r: {
-                    beginAtZero: true,
-                    max: 1,
-                    ticks: { stepSize: 0.1 }
-                }
-            }
-        }
-    });
-}
+    if (status === 'severe') element.classList.add('status-severe');
+    else if (status === 'medium') element.classList.add('status-medium');
+    else if (status === 'mild') element.classList.add('status-mild');
+    else element.classList.add('status-medium'); 
+}   
 
 healthForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     postAnalysisArea.style.display = 'block'; 
-
     connResultBox.innerHTML = 'در حال پردازش...';
     connResultBox.className = 'result-box'; 
     bayesResultBox.innerHTML = 'در حال پردازش...';
@@ -106,53 +58,37 @@ healthForm.addEventListener('submit', async (e) => {
         medication_count: parseInt(document.getElementById('MedicationCount').value), 
         test_score: parseInt(document.getElementById('TestScore').value),
     };
-    CnnPrediction
-    const predictKnnRequest = fetch('http://127.0.0.1:8000/predict/knn', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-    });
-
-    const predictBayesRequest = fetch('http://127.0.0.1:8000/predict/bayes', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-    });
-
-    const getKnnScoresRequest = fetch('http://127.0.0.1:8000/scores/knn');
-    const getBayesScoresRequest = fetch('http://127.0.0.1:8000/scores/bayes');
 
     try {
         const results = await Promise.allSettled([
-            predictKnnRequest, 
-            predictBayesRequest, 
-            getKnnScoresRequest, 
-            getBayesScoresRequest
+            getKnnPrediction(formData), 
+            getBayesPrediction(formData), 
+            getKnnScores(), 
+            getBayesScores()
         ]);
 
-        if (results[0].status === 'fulfilled' && results[0].value.ok) {
-            const resJson = await results[0].value.json();
-            updateResultDisplay(connResultBox, resJson);
+        if (results[0].status === 'fulfilled') {
+            updateResultDisplay(connResultBox, results[0].value);
         } else {
             connResultBox.innerHTML = 'خطا در دریافت نتیجه KNN';
+            console.error("KNN Prediction Error:", results[0].reason);
         }
 
-        if (results[1].status === 'fulfilled' && results[1].value.ok) {
-            const resJson = await results[1].value.json();
-            updateResultDisplay(bayesResultBox, resJson);
+        if (results[1].status === 'fulfilled') {
+            updateResultDisplay(bayesResultBox, results[1].value);
         } else {
-            bayesResultBox.innerHTML = 'خطا در دریافت نتیجه Bayes';
+            bayesResultBox.innerHTML = 'خطای Bayes';
+            console.error("Bayes Prediction Error:", results[1].reason);
         }
 
-        if (results[2].status === 'fulfilled' && results[2].value.ok && 
-            results[3].status === 'fulfilled' && results[3].value.ok) {
-            const knnMetrics = await results[2].value.json();
-            const bayesMetrics = await results[3].value.json();
-            drawRadarChart(knnMetrics, bayesMetrics);
+        if (results[2].status === 'fulfilled' && results[3].status === 'fulfilled') {
+            drawRadarChart('radarChart', results[2].value, results[3].value);
+        } else {
+            console.error("Chart Data Unavailable. KNN Scores Status:", results[2].status, "Bayes Scores Status:", results[3].status);
         }
 
     } catch (err) {
-        console.error("Error processing results:", err);
+        console.error("Critical Process Error:", err);
         connResultBox.innerHTML = 'خطای سیستمی';
         bayesResultBox.innerHTML = 'خطای سیستمی';
     }
