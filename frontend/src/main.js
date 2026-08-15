@@ -77,7 +77,7 @@ function drawRadarChart(knn, bayes) {
                 r: {
                     beginAtZero: true,
                     max: 1,
-                    ticks: { stepSize: 0.2 }
+                    ticks: { stepSize: 0.1 }
                 }
             }
         }
@@ -106,7 +106,7 @@ healthForm.addEventListener('submit', async (e) => {
         medication_count: parseInt(document.getElementById('MedicationCount').value), 
         test_score: parseInt(document.getElementById('TestScore').value),
     };
-
+    CnnPrediction
     const predictKnnRequest = fetch('http://127.0.0.1:8000/predict/knn', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
